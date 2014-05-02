@@ -15,10 +15,13 @@
  */
 package example.stores;
 
+import java.net.URI;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 
 /**
@@ -28,10 +31,22 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguratio
  */
 @EnableAutoConfiguration
 @ComponentScan
-@Import(RepositoryRestMvcConfiguration.class)
 public class StoreApp {
 
 	public static void main(String[] args) {
 		SpringApplication.run(StoreApp.class, args);
+	}
+
+	@Configuration
+	public static class RestConfig extends RepositoryRestMvcConfiguration {
+
+		/* 
+		 * (non-Javadoc)
+		 * @see org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration#configureRepositoryRestConfiguration(org.springframework.data.rest.core.config.RepositoryRestConfiguration)
+		 */
+		@Override
+		protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
+			config.setBaseUri(URI.create("/api/"));
+		}
 	}
 }
