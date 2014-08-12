@@ -9,6 +9,7 @@
 	</parent>
 	
 	<artifactId>rest-microservices-store</artifactId>
+	<name>Store Service</name>
 	
 	<properties>
 		<mongodb.version>2.12.1</mongodb.version>
