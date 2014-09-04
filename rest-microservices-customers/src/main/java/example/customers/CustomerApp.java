@@ -18,8 +18,6 @@ package example.customers;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
@@ -28,7 +26,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAutoConfiguration
 @ComponentScan
 @EnableScheduling
-@Import(RepositoryRestMvcConfiguration.class)
 public class CustomerApp {
 
 	public static void main(String[] args) {
