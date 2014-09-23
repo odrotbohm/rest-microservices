@@ -15,21 +15,19 @@
  */
 package example.customers.integration;
 
-import java.net.URI;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.*;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import java.net.URI;
 
 /**
  * @author Oliver Gierke
@@ -73,9 +71,16 @@ public class StoreIntegration {
 			log.info("Trying to access the stores system at {}…", storesUri);
 
 			Traverson traverson = new Traverson(storesUri, MediaTypes.HAL_JSON);
-			this.storesByLocationLink = traverson.follow("stores", "search", "by-location").asLink();
+			final Link linkWithoutTemplateVars = traverson.follow("stores", "search", "by-location").asLink();
+            
+            // TODO find a way to retrieve the variable names from the JSON response!
+            final TemplateVariable locationVar = new TemplateVariable("location", TemplateVariable.VariableType.REQUEST_PARAM);
+            final TemplateVariable distanceVar = new TemplateVariable("distance", TemplateVariable.VariableType.REQUEST_PARAM);
+            final TemplateVariables variables = new TemplateVariables(locationVar, distanceVar);
+            this.storesByLocationLink = new Link(new UriTemplate(linkWithoutTemplateVars.getHref(), variables), linkWithoutTemplateVars.getRel());
 
-			log.info("Found stores-by-location link pointing to {}.", storesByLocationLink.getHref());
+
+            log.info("Found stores-by-location link pointing to {}.", linkWithoutTemplateVars.getHref());
 
 		} catch (RuntimeException o_O) {
 			this.storesByLocationLink = null;
