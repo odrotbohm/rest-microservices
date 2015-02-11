@@ -20,8 +20,14 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author Oliver Gierke
@@ -29,7 +35,16 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 @EnableDiscoveryClient
+@RestController
 public class CustomerApp {
+
+	@Autowired
+	DiscoveryClient discoveryClient;
+
+	@RequestMapping("/check")
+	public List<ServiceInstance> check() {
+		return discoveryClient.getInstances("stores");
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(CustomerApp.class, args);

@@ -16,7 +16,9 @@
 package example.customers.integration;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -24,7 +26,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.client.discovery.event.InstanceRegisteredEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
@@ -39,15 +44,22 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
-class StoreIntegration {
+class StoreIntegration implements ApplicationListener<InstanceRegisteredEvent> {
 
 	private final @NonNull DiscoveryClient client;
 
 	private @Getter Link storesByLocationLink;
 
+	private AtomicBoolean discoveryAvailable = new AtomicBoolean(false);
+
+	@Override
+	public void onApplicationEvent(InstanceRegisteredEvent event) {
+		discoveryAvailable.compareAndSet(false, true);
+	}
+
 	@Scheduled(fixedDelay = 5000)
 	public void checkStoresAvailability() {
-
+		if (!discoveryAvailable.get()) return;
 		if (storesByLocationLink != null) {
 			verify(storesByLocationLink);
 		} else {
@@ -84,13 +96,14 @@ class StoreIntegration {
 
 		} catch (RuntimeException o_O) {
 			this.storesByLocationLink = null;
-			log.info("Stores system unavailable. Got: ", o_O.getMessage());
+			log.info("Stores system unavailable. Got: "+ o_O.getMessage(), o_O);
 		}
 	}
 
 	private Optional<String> discoverStoreService() {
 
-		return client.getInstances("stores").stream().findFirst()
+		List<ServiceInstance> stores = client.getInstances("stores");
+		return stores.stream().findFirst()
 				.map(instance -> String.format("http://%s:%s", instance.getHost(), instance.getPort()));
 	}
 
