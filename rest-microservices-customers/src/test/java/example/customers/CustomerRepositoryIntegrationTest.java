@@ -37,9 +37,7 @@ public class CustomerRepositoryIntegrationTest {
 	@Test
 	public void testname() {
 
-		Customer customer = new Customer();
-		customer.setFirstname("Dave");
-		customer.setLastname("Matthews");
+		Customer customer = new Customer("Dave", "Matthews");
 		customer.setAddress(new Address("street", "zipCode", "city", new Location(55.349451, -131.673817)));
 
 		customer = repository.save(customer);

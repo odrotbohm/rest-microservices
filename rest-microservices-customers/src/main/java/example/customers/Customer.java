@@ -20,15 +20,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author Oliver Gierke
  */
 @Entity
 @Data
+@RequiredArgsConstructor
 public class Customer {
 
 	@Id @GeneratedValue Long id;
-	String firstname, lastname;
+	final String firstname, lastname;
 	Address address;
+
+	Customer() {
+		this.firstname = null;
+		this.lastname = null;
+	}
 }

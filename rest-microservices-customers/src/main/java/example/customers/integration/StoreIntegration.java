@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,15 @@
 package example.customers.integration;
 
 import java.net.URI;
+import java.util.Optional;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
@@ -37,9 +39,9 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
-public class StoreIntegration {
+class StoreIntegration {
 
-	private final Environment env;
+	private final @NonNull DiscoveryClient client;
 
 	private @Getter Link storesByLocationLink;
 
@@ -69,18 +71,27 @@ public class StoreIntegration {
 	private void discoverByLocationLink() {
 
 		try {
-			URI storesUri = URI.create(env.getProperty("integration.stores.uri"));
-			log.info("Trying to access the stores system at {}…", storesUri);
 
-			Traverson traverson = new Traverson(storesUri, MediaTypes.HAL_JSON);
-			this.storesByLocationLink = traverson.follow("stores", "search", "by-location").asLink();
+			discoverStoreService().ifPresent(storesUri -> {
 
-			log.info("Found stores-by-location link pointing to {}.", storesByLocationLink.getHref());
+				log.info("Discovered stores system at {}. Discovering by-location resource…", storesUri);
+
+				Traverson traverson = new Traverson(URI.create(storesUri), MediaTypes.HAL_JSON);
+				this.storesByLocationLink = traverson.follow("stores", "search", "by-location").asLink();
+
+				log.info("Found stores-by-location link pointing to {}.", storesByLocationLink.getHref());
+			});
 
 		} catch (RuntimeException o_O) {
 			this.storesByLocationLink = null;
 			log.info("Stores system unavailable. Got: ", o_O.getMessage());
 		}
+	}
+
+	private Optional<String> discoverStoreService() {
+
+		return client.getInstances("stores").stream().findFirst()
+				.map(instance -> String.format("http://%s:%s", instance.getHost(), instance.getPort()));
 	}
 
 	public boolean isStoresAvailable() {

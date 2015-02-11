@@ -15,20 +15,35 @@
  */
 package example.customers;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * @author Oliver Gierke
  */
-@EnableAutoConfiguration
-@ComponentScan
+@SpringBootApplication
 @EnableScheduling
+@EnableDiscoveryClient
 public class CustomerApp {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CustomerApp.class, args);
+	}
+
+	@Autowired CustomerRepository customers;
+
+	@PostConstruct
+	public void init() {
+
+		Customer customer = new Customer("Oliver", "Gierke");
+		customer.address = new Address("625 Avenue of the Americas", "10011", "New York", new Location(40.740337,
+				-73.995146));
+
+		customers.save(customer);
 	}
 }
