@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package example.customers;
+package org.springframework.cloud.hypermedia;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import java.util.Optional;
+
+import org.springframework.cloud.client.ServiceInstance;
 
 /**
+ * A {@link ServiceInstanceProvider} that will always return the configured {@link ServiceInstance}.
+ * 
  * @author Oliver Gierke
  */
-@Entity
-@Getter
 @RequiredArgsConstructor
-public class Customer {
+public class StaticServiceInstanceProvider implements ServiceInstanceProvider {
 
-	private @Id @GeneratedValue Long id;
-	private final String firstname, lastname;
-	private @Setter Address address;
+	private final ServiceInstance instance;
 
-	Customer() {
-		this.firstname = null;
-		this.lastname = null;
+	/* 
+	 * (non-Javadoc)
+	 * @see example.customers.integration.ServiceInstanceProvider#getServiceInstance()
+	 */
+	@Override
+	public Optional<ServiceInstance> getServiceInstance() {
+		return Optional.of(instance);
 	}
 }

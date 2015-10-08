@@ -15,28 +15,30 @@
  */
 package example.customers.integration;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import example.customers.Customer;
+import example.customers.Location;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.hypermedia.DiscoveredResource;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
 
-import example.customers.Customer;
-import example.customers.Location;
-
 /**
  * @author Oliver Gierke
  */
 @Component
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor(onConstructor = @__(@Autowired) )
 public class CustomerResourceProcessor implements ResourceProcessor<Resource<Customer>> {
 
-	private final StoreIntegration storeIntegration;
+	private final @NonNull DiscoveredResource storesByLocationResource;
 
 	/* 
 	 * (non-Javadoc)
@@ -48,17 +50,20 @@ public class CustomerResourceProcessor implements ResourceProcessor<Resource<Cus
 		Customer customer = resource.getContent();
 		Location location = customer.getAddress().getLocation();
 
-		if (location == null || !storeIntegration.isStoresAvailable()) {
-			return resource;
-		}
+		Optional<Link> link = storesByLocationResource.getLink();
 
-		Link link = storeIntegration.getStoresByLocationLink();
+		link.ifPresent(it -> {
 
-		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("location", String.format("%s,%s", location.getLatitude(), location.getLongitude()));
-		parameters.put("distance", "50km");
+			if (location == null) {
+				return;
+			}
 
-		resource.add(link.expand(parameters).withRel("stores-nearby"));
+			Map<String, Object> parameters = new HashMap<>();
+			parameters.put("location", String.format("%s,%s", location.getLatitude(), location.getLongitude()));
+			parameters.put("distance", "50km");
+
+			resource.add(it.expand(parameters).withRel("stores-nearby"));
+		});
 
 		return resource;
 	}

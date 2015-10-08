@@ -1,16 +1,5 @@
-package example.customers;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +13,20 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package example.customers;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
+ * Integration tests for {@link CustomerRepository}.
+ * 
  * @author Oliver Gierke
  */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -37,13 +38,11 @@ public class CustomerRepositoryIntegrationTest {
 	@Test
 	public void testname() {
 
-		Customer customer = new Customer();
-		customer.setFirstname("Dave");
-		customer.setLastname("Matthews");
+		Customer customer = new Customer("Dave", "Matthews");
 		customer.setAddress(new Address("street", "zipCode", "city", new Location(55.349451, -131.673817)));
 
 		customer = repository.save(customer);
 
-		assertThat(repository.findOne(customer.id), is(customer));
+		assertThat(repository.findOne(customer.getId()), is(customer));
 	}
 }
