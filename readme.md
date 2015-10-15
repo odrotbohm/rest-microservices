@@ -1,5 +1,7 @@
 # REST based micro-services sample
 
+[![Build Status](https://travis-ci.org/olivergierke/rest-microservices.svg?branch=master)](https://travis-ci.org/olivergierke/rest-microservices)
+
 ## tl;dr
 
 - Two Spring Boot based Maven projects that are standalone applications:
