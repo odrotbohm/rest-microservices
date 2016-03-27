@@ -24,10 +24,10 @@ import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.hypermedia.DiscoveredResource;
-import org.springframework.cloud.hypermedia.DynamicServiceInstanceProvider;
-import org.springframework.cloud.hypermedia.ServiceInstanceProvider;
-import org.springframework.cloud.hypermedia.StaticServiceInstanceProvider;
+import org.springframework.cloud.client.hypermedia.DiscoveredResource;
+import org.springframework.cloud.client.hypermedia.DynamicServiceInstanceProvider;
+import org.springframework.cloud.client.hypermedia.ServiceInstanceProvider;
+import org.springframework.cloud.client.hypermedia.StaticServiceInstanceProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 

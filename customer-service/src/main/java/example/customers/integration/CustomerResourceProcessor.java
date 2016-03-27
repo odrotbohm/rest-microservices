@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.hypermedia.DiscoveredResource;
+import org.springframework.cloud.client.hypermedia.DiscoveredResource;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
@@ -50,7 +50,7 @@ public class CustomerResourceProcessor implements ResourceProcessor<Resource<Cus
 		Customer customer = resource.getContent();
 		Location location = customer.getAddress().getLocation();
 
-		Optional<Link> link = storesByLocationResource.getLink();
+		Optional<Link> link = Optional.ofNullable(storesByLocationResource.getLink());
 
 		link.ifPresent(it -> {
 
