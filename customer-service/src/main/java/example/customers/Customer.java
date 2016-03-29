@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,30 +15,48 @@
  */
 package example.customers;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.Value;
 
+import java.util.UUID;
+
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
  * @author Oliver Gierke
  */
+@Value
 @Entity
-@Getter
-@EqualsAndHashCode(of = "id")
+@NoArgsConstructor(force = true)
 @RequiredArgsConstructor
 public class Customer {
 
-	private @Id @GeneratedValue Long id;
-	private final String firstname, lastname;
-	private @Setter Address address;
+	@Id UUID id = UUID.randomUUID();
+	String firstname, lastname;
+	Address address;
 
-	Customer() {
-		this.firstname = null;
-		this.lastname = null;
+	/**
+	 * @author Oliver Gierke
+	 */
+	@Value
+	@Embeddable
+	@AllArgsConstructor
+	@NoArgsConstructor(force = true)
+	public static class Address {
+
+		String street, zipCode, city;
+		Location location;
+
+		@Value
+		@Embeddable
+		@RequiredArgsConstructor
+		@NoArgsConstructor(force = true)
+		public static class Location {
+			double latitude, longitude;
+		}
 	}
 }

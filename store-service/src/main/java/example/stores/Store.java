@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,13 @@
  */
 package example.stores;
 
-import lombok.Data;
+import lombok.Value;
+
+import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.geo.Point;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -25,25 +29,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * 
  * @author Oliver Gierke
  */
-@Data
+@Value
 @Document
 public class Store {
 
-	private final @Id String id;
-	private final String name;
-	private final Address address;
+	@Id UUID id = UUID.randomUUID();
+	String name;
+	Address address;
 
-	public Store(String name, Address address) {
+	@Value
+	public static class Address {
 
-		this.name = name;
-		this.address = address;
-		this.id = null;
-	}
-
-	protected Store() {
-
-		this.id = null;
-		this.name = null;
-		this.address = null;
+		String street, city, zip;
+		@GeoSpatialIndexed Point location;
 	}
 }

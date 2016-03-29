@@ -15,6 +15,9 @@
  */
 package example.customers;
 
+import example.customers.Customer.Address;
+import example.customers.Customer.Address.Location;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,8 +95,7 @@ public class CustomerApplication {
 	@PostConstruct
 	public void init() {
 
-		Customer customer = new Customer("Oliver", "Gierke");
-		customer.setAddress(
+		Customer customer = new Customer("Oliver", "Gierke",
 				new Address("625 Avenue of the Americas", "10011", "New York", new Location(40.740337, -73.995146)));
 
 		customers.save(customer);

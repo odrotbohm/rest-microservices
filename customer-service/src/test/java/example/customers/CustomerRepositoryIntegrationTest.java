@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,9 @@ package example.customers;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+
+import example.customers.Customer.Address;
+import example.customers.Customer.Address.Location;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,10 +41,8 @@ public class CustomerRepositoryIntegrationTest {
 	@Test
 	public void savesAndFindsCustomer() {
 
-		Customer customer = new Customer("Dave", "Matthews");
-		customer.setAddress(new Address("street", "zipCode", "city", new Location(55.349451, -131.673817)));
-
-		customer = repository.save(customer);
+		Customer customer = repository.save(new Customer("Dave", "Matthews",
+				new Address("street", "zipCode", "city", new Location(55.349451, -131.673817))));
 
 		assertThat(repository.findOne(customer.getId()), is(customer));
 	}
