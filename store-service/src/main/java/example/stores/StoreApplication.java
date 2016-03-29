@@ -27,7 +27,6 @@ import org.springframework.context.annotation.Profile;
  * @author Oliver Gierke
  */
 @SpringBootApplication
-@EnableDiscoveryClient
 public class StoreApplication {
 
 	public static void main(String[] args) {
