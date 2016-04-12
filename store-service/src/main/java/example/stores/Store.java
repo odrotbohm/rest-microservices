@@ -21,6 +21,7 @@ import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.geo.Point;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -41,6 +42,6 @@ public class Store {
 	public static class Address {
 
 		String street, city, zip;
-		@GeoSpatialIndexed Point location;
+		@GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE) Point location;
 	}
 }
