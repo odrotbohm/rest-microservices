@@ -19,6 +19,7 @@
 		<module>hystrix-dashboard</module>
 		<module>store-service</module>
 		<module>customer-service</module>
+		<module>zuul-proxy</module>
 	</modules>
 
 	<properties>
