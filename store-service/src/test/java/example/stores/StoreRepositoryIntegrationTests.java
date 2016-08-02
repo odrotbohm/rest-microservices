@@ -60,6 +60,7 @@ public class StoreRepositoryIntegrationTests {
 
 		Page<Store> stores = repository.findByAddressLocationNear(location, new Distance(1.0, Metrics.KILOMETERS),
 				new PageRequest(0, 10));
+		System.out.println("printing store value "+stores);
 
 		assertThat(stores.getContent(), hasSize(1));
 		assertThat(stores.getContent(), hasItem(store));
