@@ -24,16 +24,16 @@ import example.customers.Customer.Address.Location;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * Integration tests for {@link CustomerRepository}.
  * 
  * @author Oliver Gierke
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CustomerApplication.class)
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class CustomerRepositoryIntegrationTest {
 
 	@Autowired CustomerRepository repository;
