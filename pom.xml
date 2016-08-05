@@ -28,13 +28,15 @@
 
 	<dependencyManagement>
 		<dependencies>
+
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>Brixton.BUILD-SNAPSHOT</version>
+				<version>Brixton.SR4</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
