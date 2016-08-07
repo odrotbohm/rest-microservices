@@ -32,7 +32,15 @@
 			<groupId>de.flapdoodle.embed</groupId>
 			<artifactId>de.flapdoodle.embed.mongo</artifactId>
 			<scope>runtime</scope>
+
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure -->
+		<!-- dependency added for mongodb 3.2. Local system should have mongodb 3.2 installed and mongo server running-->
+		<!--<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
+			<version>1.4.0.RELEASE</version>
+		</dependency>-->
 
 		<!-- Spring Cloud -->
 
